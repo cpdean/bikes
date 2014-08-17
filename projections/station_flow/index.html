@@ -98,6 +98,7 @@ d3.csv("stations.csv", function(data){
         var start_node = lookup_by("Start Station");
         var end_node = lookup_by("End Station");
 
+        /*
         map.selectAll("line")
         .data(graph_data)
         .enter()
@@ -108,7 +109,37 @@ d3.csv("stations.csv", function(data){
         .attr("x2", function(d){ return end_node(d)[0]; })
         .attr("y2", function(d){ return end_node(d)[1]; })
         .attr("stroke", function(d){ return d.weight > 0 ? "green" : "red";})
-        .attr("stroke-width", function(d){ return .5;})
+        .attr("stroke-width", function(d){ return Math.log(Math.abs(d.weight));})
+        */
+
+        map.selectAll("polygon")
+        .data(graph_data)
+        .enter()
+        .append("polygon")
+        .attr("class", "route")
+        .attr("fill", function(d){ return d.weight > 0 ? "green" : "red";})
+        .attr("points", function(d){
+            var start_point = start_node(d);
+            var base_point = end_node(d);
+            var end_offset = [base_point[0], base_point[1] + Math.log(Math.abs(d.weight))];
+            function distance(p1, p2){
+                return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
+            }
+            var c = 1;
+
+
+            var base_1_x = base_point[0] + c * (base_point[1] - start_point[1]) / distance(base_point, start_point);
+            var base_1_y = base_point[1] + c * (base_point[0] - start_point[1]) / distance(base_point, start_point);
+
+            var base_2_x = base_point[0] - c * (base_point[1] - start_point[1]) / distance(base_point, start_point);
+            var base_2_y = base_point[1] - c * (base_point[0] - start_point[0]) / distance(base_point, start_point);
+
+            var base_1 = [base_1_x, base_1_y];
+            var base_2 = [base_2_x, base_2_y];
+
+            var comma_delimited = [start_point, base_1, base_2].map(function(e){ return e.join(","); });
+            return comma_delimited.join(" ");
+        });
 
     });
 
