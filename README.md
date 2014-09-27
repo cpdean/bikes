@@ -9,11 +9,11 @@ I want to pull all these drafts together into something more cohesive that peopl
 
 ### Timeline
 
-* *2014-09-27* - documentation and outlining project history
-* *2014-09-07* - fix zoom behavior in `projections/station_flow/index.html`
-* *2014-09-06* - fix work-in-progress vis `projections/station_flow/index.html`, didn't understand the math to draw shapes between stations. still don't, to be honest. 
-* *2014-08-17* - use pandas dataframes to concisely compute the aggregate bikeflow between a chosen station and the other stations over the course of the year. vis in `projections/station_flow/index.html`
-* *2014-08-12* - first d3.js vis.  `data/openstreet/demos/just_points_demo/index.html` took raw station metadata and plotted points on the screen.  Not very useful yet, because i have only station data on the screen. need to figure out how to put additional map data for sense of context.
-* *2014-08-04* - started `Tracking Rebalances.ipynb` project.  started with basic visualizations of unprocessed data, but then came up with the domain definition of a "station budget", reprocessed and visualized the new term to demonstrate commuter flow in and out of a given station throughout the course of the year.
-* *2014-07-13* - added `basics.ipynb`, exploring simple features of the bike transaction dataset and some examples of projecting data out for later visualizations in d3
+* **2014-09-27** - documentation and outlining project history
+* **2014-09-07** - fix zoom behavior in `projections/station_flow/index.html`
+* **2014-09-06** - fix work-in-progress vis `projections/station_flow/index.html`, didn't understand the math to draw shapes between stations. still don't, to be honest. 
+* **2014-08-17** - use pandas dataframes to concisely compute the aggregate bikeflow between a chosen station and the other stations over the course of the year. vis in `projections/station_flow/index.html`
+* **2014-08-12** - first d3.js vis.  `data/openstreet/demos/just_points_demo/index.html` took raw station metadata and plotted points on the screen.  Not very useful yet, because i have only station data on the screen. need to figure out how to put additional map data for sense of context.
+* **2014-08-04** - started `Tracking Rebalances.ipynb` project.  started with basic visualizations of unprocessed data, but then came up with the domain definition of a "station budget", reprocessed and visualized the new term to demonstrate commuter flow in and out of a given station throughout the course of the year.
+* **2014-07-13** - added `basics.ipynb`, exploring simple features of the bike transaction dataset and some examples of projecting data out for later visualizations in d3
 
