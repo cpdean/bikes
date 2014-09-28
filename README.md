@@ -8,6 +8,7 @@ I'm doing the same thing for data from a minneapolis bike share, and trying to c
 
 ### Timeline
 
+* **2014-09-27** - added voronoi work-in-progress with some click behaviors `projections/see_stations/voronoi/index.html`
 * **2014-09-27** - documentation and outlining project history
 * **2014-09-07** - fix zoom behavior in `projections/station_flow/index.html`
 * **2014-09-06** - fix work-in-progress vis `projections/station_flow/index.html`, didn't understand the math to draw shapes between stations. still don't, to be honest. 
