@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  margin: 0;
+}
+
+circle {
+    fill: steelblue;
+}
+
+line.route {
+}
+
+/* copy from voronoi */
+path {
+  stroke: #fff;
+}
+
+circle {
+  fill: #000;
+  pointer-events: none;
+}
+
+.selected {
+    fill: rgb(130, 130, 200);
+}
+
+.neighbor {
+    fill: rgb(255, 100, 190);
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = Math.max(960, window.innerWidth),
+    height = Math.max(500, window.innerHeight);
+
+
+d3.csv("stations.csv", function(data){
+
+    var zoom = d3.behavior.zoom()
+    .scaleExtent([1, 8])
+    .on("zoom", zoomed);
+
+    var svg = d3.select("body")
+    .append("svg")
+    .attr("id", "map")
+    .attr("width", width)
+    .attr("height", height)
+    .call(zoom)
+    ;
+
+    var map = svg.append("g");
+
+    map.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "#fff")
+    ;
+
+
+    function zoomed(){
+        map.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
+
+    var projection = d3.geo.mercator()
+    .scale((1 << 20)/ 2 / Math.PI)
+    //.translate([-width / 2, -height / 2])
+    .center([-93.267202, 44.980991])
+
+
+
+    var shifted = data.map(function(d){
+        var c = [d.Longitude, d.Latitude];
+        var n = projection(c);
+        return n;
+    });
+
+    /* copypaste voronoi */
+    var voronoi = d3.geom.voronoi()
+    .clipExtent([[0, 0], [width, height]]);
+
+    var path = map.selectAll("path");
+
+    redraw();
+
+    function redraw() {
+        var p = path
+        .data(voronoi(shifted), polygon);
+
+        p.exit().remove();
+
+        p.enter().append("path")
+        .on("click", select)
+        .attr("fill", "rgb(184,225,134)")
+        .attr("d", polygon);
+
+        p.order();
+    }
+
+    function select(e) {
+        map.selectAll(".selected")
+        .classed("selected", false);
+
+        map.selectAll(".neighbor")
+        .classed("neighbor", false);
+
+        d3.select(this)
+        .classed("selected", true);
+
+        select_neighbors(d3.select(this))
+        .classed("neighbor", true);
+    }
+
+    function select_neighbors(shape){
+        /* finds paths adjacent to the path passed in,
+         but removes exact path matches */
+
+        var loose_matches = map.selectAll("path").filter(function(d, i) {
+            // at least one point touches
+            for(var i = 0; i < d.length; i++){
+                for(var j = 0; j < shape.datum().length; j++){
+                    if(d[i][0] === shape.datum()[j][0]
+                        && d[i][1] === shape.datum()[j][1]){
+                            return true;
+                    }
+                }
+            }
+            return false;
+        });
+
+        var without_exact_match = loose_matches.filter(function(d, i) {
+            // for each list of points, return false if
+            // all points matched
+            var matching_points = 0;
+            for(var i = 0; i < d.length; i++){
+                for(var j = 0; j < shape.datum().length; j++){
+                    if(d[i][0] === shape.datum()[j][0]
+                        && d[i][1] === shape.datum()[j][1]){
+                            matching_points++;
+                    }
+                }
+            }
+            if(matching_points == shape.datum().length){
+                return false;
+            }
+            else{
+                return true;
+            }
+        });
+        return without_exact_match;
+    }
+
+    function polygon(d) {
+        return "M" + d.join("L") + "Z";
+    }
+
+    var stations = map.selectAll("circle")
+    .data(shifted)
+    .enter()
+    .append("circle")
+    .attr("transform", transform)
+    .attr("r", 2);
+
+    function transform(d){
+        return "translate(" + d[0] + "," + d[1] + ")";
+    }
+
+
+});
+
+
+</script>
